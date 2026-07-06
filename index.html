@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarjamah — Panyarungsum Undak-Usuk Basa Sunda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #14241b;
+    --bg-panel: #1c3326;
+    --bg-panel-raised: #234032;
+    --cream: #f4f0e6;
+    --cream-dim: #b9c2b5;
+    --gold: #c89b3c;
+    --gold-soft: #e3c878;
+    --sedeng: #7a9b6e;
+    --loma: #a8794f;
+    --lemes: #c89b3c;
+    --line: rgba(244, 240, 230, 0.12);
+    --danger: #c4694a;
+    --radius: 14px;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg-deep);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200, 155, 60, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(122, 155, 110, 0.06), transparent);
+    color: var(--cream);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .hero .eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 14px;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.08;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold-soft);
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--cream-dim);
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  /* ---------- RECORD CARD ---------- */
+  .record-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    margin-bottom: 28px;
+  }
+
+  .record-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .mic-btn {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gold);
+    color: var(--bg-deep);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .mic-btn:hover { transform: scale(1.04); }
+  .mic-btn:active { transform: scale(0.97); }
+
+  .mic-btn.recording {
+    background: var(--danger);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(196, 105, 74, 0.5); }
+    50% { box-shadow: 0 0 0 14px rgba(196, 105, 74, 0); }
+  }
+
+  .record-info {
+    flex: 1;
+  }
+
+  .record-info .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 3px;
+  }
+
+  .record-info .sub {
+    font-size: 13px;
+    color: var(--cream-dim);
+  }
+
+  .record-status {
+    font-size: 12px;
+    color: var(--gold-soft);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-width: 90px;
+    text-align: right;
+  }
+
+  /* ---------- CONFIRM STEP ---------- */
+  .confirm-section {
+    display: none;
+    background: var(--bg-panel);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+    animation: appear 0.3s ease;
+  }
+
+  .confirm-section.show { display: block; }
+
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .confirm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .confirm-header .title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold-soft);
+  }
+
+  .confirm-header .badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bg-deep);
+    background: var(--gold-soft);
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  .confirm-hint {
+    font-size: 13px;
+    color: var(--cream-dim);
+    margin-bottom: 14px;
+  }
+
+  .transcript-box {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 64px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .transcript-box:focus {
+    border-color: var(--gold);
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--bg-deep);
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream-dim);
+    border: 1px solid var(--line);
+  }
+
+  .btn-ghost:hover { color: var(--cream); border-color: var(--cream-dim); }
+
+  .edit-flag {
+    display: none;
+    font-size: 12px;
+    color: var(--sedeng);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .edit-flag.show { display: block; }
+
+  /* ---------- LEVEL STAIRS (signature element) ---------- */
+  .stairs-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    margin: 8px 0 18px;
+    text-align: center;
+  }
+
+  .stairs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .step {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    opacity: 0.45;
+    transform: translateY(0);
+    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  /* Undak = tangga: tiap level sedikit lebih "naik" & lebih lebar, Lemes paling halus/tertinggi */
+  .step[data-level="loma"]   { margin-left: 0;   border-left-color: var(--loma); }
+  .step[data-level="sedeng"] { margin-left: 18px; border-left-color: var(--sedeng); }
+  .step[data-level="lemes"]  { margin-left: 36px; border-left-color: var(--lemes); }
+
+  .step.active {
+    opacity: 1;
+    background: var(--bg-panel-raised);
+  }
+
+  .step.pending {
+    opacity: 0.3;
+  }
+
+  .step-tag {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    width: 64px;
+  }
+
+  .step[data-level="loma"] .step-tag   { color: var(--loma); }
+  .step[data-level="sedeng"] .step-tag { color: var(--sedeng); }
+  .step[data-level="lemes"] .step-tag  { color: var(--lemes); }
+
+  .step-output {
+    font-size: 16px;
+    color: var(--cream);
+    min-height: 24px;
+  }
+
+  .step-output .placeholder {
+    color: var(--cream-dim);
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .step-play {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--cream-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .step-play:hover { border-color: var(--gold); color: var(--gold); }
+  .step-play:disabled { opacity: 0.3; cursor: default; }
+  .step-play:disabled:hover { border-color: var(--line); color: var(--cream-dim); }
+
+  /* ---------- FOOTER NOTE ---------- */
+  .meta-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--cream-dim);
+    opacity: 0.7;
+    margin-top: 40px;
+  }
+
+  .meta-note span {
+    color: var(--gold-soft);
+  }
+
+  @media (max-width: 520px) {
+    .step[data-level="sedeng"] { margin-left: 9px; }
+    .step[data-level="lemes"]  { margin-left: 18px; }
+    .record-row { flex-wrap: wrap; }
+    .record-status { width: 100%; text-align: left; margin-top: 4px; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .mic-btn.recording { animation: none; }
+    .confirm-section, .step { transition: none; animation: none; }
+  }
+
+  /* Focus visibility */
+  button:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--gold-soft);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Demo Skripsi · Speech-to-Speech</div>
+    <h1>Ti basa <em>Indonesia</em><br>ka Undak-Usuk Sunda</h1>
+    <p>Ucapkeun hiji kalimah, sistem bakal narjamahkeunana kana tilu tingkatan basa Sunda: Loma, Sedeng, jeung Lemes.</p>
+  </div>
+
+  <!-- STEP 1: RECORD -->
+  <div class="record-card">
+    <div class="record-row">
+      <button class="mic-btn" id="micBtn" aria-label="Mimitan ngarékam">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" id="micIcon">
+          <path d="M12 14a3 3 0 003-3V6a3 3 0 10-6 0v5a3 3 0 003 3z" fill="currentColor"/>
+          <path d="M19 11a7 7 0 01-14 0M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="record-info">
+        <div class="label" id="recordLabel">Pencet pikeun nyarios</div>
+        <div class="sub" id="recordSub">Contona: "Kamu mau pulang sekarang?"</div>
+      </div>
+      <div class="record-status" id="recordStatus">Siap</div>
+    </div>
+  </div>
+
+  <!-- STEP 2: CONFIRM / EDIT TRANSCRIPT -->
+  <div class="confirm-section" id="confirmSection">
+    <div class="confirm-header">
+      <div class="title">Confirm dulu nya</div>
+      <div class="badge" id="confirmBadge">Hasil ucapan</div>
+    </div>
+    <div class="confirm-hint">Cek heula naha kecap-kecapna geus bener. Lamun aya nu salah, bisa diédit langsung dina kolom ieu saméméh ditarjamahkeun.</div>
+    <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
+    <div class="edit-flag" id="editFlag">✎ Téks geus diédit ti hasil ucapan asli</div>
+    <div class="confirm-actions">
+      <button class="btn btn-primary" id="confirmBtn">Konfirmasi &amp; Tarjamahkeun</button>
+      <button class="btn btn-ghost" id="rerecordBtn">Rékam Deui</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULTS (the "undak" stairs) -->
+  <div class="stairs-label">Hasil Tarjamahan · Tilu Undak Basa</div>
+  <div class="stairs" id="stairs">
+    <div class="step pending" data-level="loma">
+      <div class="step-tag">Loma</div>
+      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
+      <button class="step-play" disabled aria-label="Dengekeun Loma">▶</button>
+    </div>
+    <div class="step pending" data-level="sedeng">
+      <div class="step-tag">Sedeng</div>
+      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
+      <button class="step-play" disabled aria-label="Dengekeun Sedeng">▶</button>
+    </div>
+    <div class="step pending" data-level="lemes">
+      <div class="step-tag">Lemes</div>
+      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
+      <button class="step-play" disabled aria-label="Dengekeun Lemes">▶</button>
+    </div>
+  </div>
+
+  <div class="meta-note">
+    Sistem Penerjemah <span>Undak-Usuk Basa Sunda</span> · Fine-tuned Llama 3 8B + QLoRA
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ===================================================================
+  // KONFIGURASI
+  // ===================================================================
+  // Ganti nilai ini kalau alamat Space Hugging Face kamu berbeda/berubah.
+  const API_BASE = 'https://zahrafakhirah27-sundaspeak-backend.hf.space';
+
+  const LEVELS = ['Loma', 'Sedeng', 'Lemes']; // huruf besar di awal, sesuai aturan API
+
+  // ===================================================================
+  // STATE
+  // ===================================================================
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let originalTranscript = "";
+
+  const micBtn = document.getElementById('micBtn');
+  const recordStatus = document.getElementById('recordStatus');
+  const recordLabel = document.getElementById('recordLabel');
+  const recordSub = document.getElementById('recordSub');
+  const confirmSection = document.getElementById('confirmSection');
+  const confirmBadge = document.getElementById('confirmBadge');
+  const transcriptBox = document.getElementById('transcriptBox');
+  const editFlag = document.getElementById('editFlag');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const rerecordBtn = document.getElementById('rerecordBtn');
+  const stairs = document.getElementById('stairs');
+
+  // ===================================================================
+  // HELPER: tampilkan pesan error singkat di area rekam
+  // ===================================================================
+  function showRecordError(message) {
+    recordLabel.textContent = message;
+    recordLabel.style.color = 'var(--danger)';
+    recordStatus.textContent = 'Gagal';
+  }
+
+  function resetRecordLabel() {
+    recordLabel.style.color = '';
+    recordLabel.textContent = 'Pencet pikeun nyarios';
+    recordSub.textContent = 'Contona: "Kamu mau pulang sekarang?"';
+  }
+
+  // ===================================================================
+  // STEP 1: REKAM AUDIO ASLI (MediaRecorder), lalu kirim ke /transcribe
+  // ===================================================================
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+
+      // Pilih mimeType yang paling didukung browser
+      const mimeCandidates = ['audio/webm', 'audio/mp4', 'audio/ogg'];
+      const mimeType = mimeCandidates.find(t => MediaRecorder.isTypeSupported(t)) || '';
+
+      mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function () {
+        // Matikan mic fisik setelah selesai rekam
+        stream.getTracks().forEach(track => track.stop());
+        const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+        sendToTranscribe(blob);
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add('recording');
+      recordStatus.textContent = 'Ngadengekeun...';
+      recordLabel.textContent = 'Nuju ngarékam...';
+      recordSub.textContent = 'Pencet deui lamun geus rengse nyarios';
+    } catch (err) {
+      console.error('Gagal akses mikrofon:', err);
+      showRecordError('Teu bisa akses mikrofon. Cek idin browser.');
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && isRecording) {
+      isRecording = false;
+      micBtn.classList.remove('recording');
+      recordStatus.textContent = 'Diproses...';
+      recordLabel.textContent = 'Nuju ditranskrip...';
+      recordSub.textContent = 'Tunggu sakedap nya';
+      mediaRecorder.stop();
+    }
+  }
+
+  micBtn.addEventListener('click', function () {
+    // Reset tampilan sebelum mulai siklus baru
+    confirmSection.classList.remove('show');
+    resetStairs();
+    resetRecordLabel();
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showRecordError('Browser ieu teu ngadukung rékam audio.');
+      return;
+    }
+
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  });
+
+  async function sendToTranscribe(audioBlob) {
+    try {
+      const formData = new FormData();
+      const ext = (audioBlob.type.includes('mp4')) ? 'mp4' : (audioBlob.type.includes('ogg') ? 'ogg' : 'webm');
+      formData.append('audio', audioBlob, 'rekaman.' + ext);
+
+      const res = await fetch(API_BASE + '/transcribe', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
+        throw new Error(errBody && errBody.error ? errBody.error : ('Server error ' + res.status));
+      }
+
+      const data = await res.json();
+      handleTranscriptReady(data.text_indo || '');
+    } catch (err) {
+      console.error('Gagal transcribe:', err);
+      recordStatus.textContent = 'Gagal';
+      recordLabel.textContent = 'Transkrip gagal, cobi deui';
+      recordLabel.style.color = 'var(--danger)';
+      recordSub.textContent = err.message || 'Aya masalah nyambungkeun ka server.';
+    }
+  }
+
+  function handleTranscriptReady(text) {
+    recordStatus.textContent = 'Siap';
+    resetRecordLabel();
+
+    originalTranscript = text;
+    transcriptBox.value = text;
+    confirmBadge.textContent = 'Hasil ucapan';
+    editFlag.classList.remove('show');
+    confirmSection.classList.add('show');
+    transcriptBox.focus();
+  }
+
+  // ===================================================================
+  // STEP 2: Konfirmasi / edit teks sebelum diterjemahkan
+  // ===================================================================
+  transcriptBox.addEventListener('input', function () {
+    const currentText = transcriptBox.value.trim();
+
+    if (currentText === originalTranscript.trim()) {
+      confirmBadge.textContent = 'Hasil ucapan';
+      editFlag.classList.remove('show');
+    } else {
+      confirmBadge.textContent = 'Geus diédit';
+      editFlag.classList.add('show');
+    }
+  });
+
+  rerecordBtn.addEventListener('click', function () {
+    confirmSection.classList.remove('show');
+    resetStairs();
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    const finalText = transcriptBox.value.trim();
+    if (!finalText) return;
+
+    confirmSection.classList.remove('show');
+    runTranslation(finalText);
+  });
+
+  // ===================================================================
+  // STEP 3: Panggil /translate untuk tiap level (Loma, Sedeng, Lemes)
+  // ===================================================================
+  function resetStairs() {
+    document.querySelectorAll('.step').forEach(function (step) {
+      step.classList.remove('active');
+      step.classList.add('pending');
+      const out = step.querySelector('.step-output');
+      out.innerHTML = '<span class="placeholder">Nungguan...</span>';
+      const btn = step.querySelector('.step-play');
+      btn.disabled = true;
+      btn.onclick = null;
+    });
+  }
+
+  async function translateOneLevel(text, level) {
+    const params = new URLSearchParams();
+    params.append('text_indo', text);
+    params.append('level', level);
+
+    const res = await fetch(API_BASE + '/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => null);
+      throw new Error(errBody && errBody.error ? errBody.error : ('Server error ' + res.status));
+    }
+
+    return res.json(); // { text_indo, text_sunda, level, audio_id }
+  }
+
+  async function runTranslation(text) {
+    LEVELS.forEach(async function (level) {
+      const key = level.toLowerCase();
+      const step = stairs.querySelector('[data-level="' + key + '"]');
+      const out = step.querySelector('.step-output');
+      const btn = step.querySelector('.step-play');
+
+      try {
+        const data = await translateOneLevel(text, level);
+
+        step.classList.remove('pending');
+        step.classList.add('active');
+        out.textContent = data.text_sunda;
+
+        if (data.audio_id) {
+          btn.disabled = false;
+          btn.onclick = function () { playSundaneseAudio(data.audio_id, btn); };
+        } else {
+          btn.disabled = true;
+        }
+      } catch (err) {
+        console.error('Gagal tarjamah level ' + level + ':', err);
+        step.classList.remove('pending');
+        step.classList.add('active');
+        out.innerHTML = '<span class="placeholder">Gagal narjamahkeun (' + (err.message || 'error') + ')</span>';
+        btn.disabled = true;
+      }
+    });
+  }
+
+  // ===================================================================
+  // TTS: putar audio hasil sungguhan dari server (bukan browser TTS lagi)
+  // ===================================================================
+  let currentAudio = null;
+
+  function playSundaneseAudio(audioId, btnEl) {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+    const url = API_BASE + '/audio/' + audioId;
+    currentAudio = new Audio(url);
+    const originalLabel = btnEl.textContent;
+    btnEl.textContent = '…';
+    currentAudio.play().catch(function (err) {
+      console.error('Gagal muter audio:', err);
+    });
+    currentAudio.onended = function () { btnEl.textContent = originalLabel; };
+    currentAudio.onerror = function () { btnEl.textContent = originalLabel; };
+  }
+})();
+</script>
+
+</body>
+</html>
