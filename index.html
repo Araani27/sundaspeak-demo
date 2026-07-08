@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarjamah — Panyarungsum Undak-Usuk Basa Sunda</title>
+<title>Terjemahan — Undak-Usuk Basa Sunda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -419,9 +419,9 @@
 <div class="wrap">
 
   <div class="hero">
-    <div class="eyebrow">Demo Skripsi · Speech-to-Speech</div>
-    <h1>Ti basa <em>Indonesia</em><br>ka Undak-Usuk Sunda</h1>
-    <p>Ucapkeun hiji kalimah, terus pilih hiji tingkatan basa Sunda nu dipikahoyong: Loma, Sedeng, atawa Lemes.</p>
+    <div class="eyebrow">Speech-to-Speech</div>
+    <h1>Dari Bahasa <em>Indonesia</em><br>ke Undak-Usuk Sunda</h1>
+    <p>Ucapkan satu kalimat, terus pilih satu tingkatan basa Sunda yang diinginkan: Loma, Sedeng, atawa Lemes.</p>
   </div>
 
   <!-- STEP 1: RECORD -->
@@ -434,25 +434,25 @@
         </svg>
       </button>
       <div class="record-info">
-        <div class="label" id="recordLabel">Pencet pikeun nyarios</div>
-        <div class="sub" id="recordSub">Contona: "Kamu mau pulang sekarang?"</div>
+        <div class="label" id="recordLabel">Tekan untuk berbicara</div>
+        <div class="sub" id="recordSub"></div>
       </div>
-      <div class="record-status" id="recordStatus">Siap</div>
+      <div class="record-status" id="recordStatus"></div>
     </div>
   </div>
 
   <!-- STEP 2: CONFIRM / EDIT TRANSCRIPT -->
   <div class="confirm-section" id="confirmSection">
     <div class="confirm-header">
-      <div class="title">Confirm dulu nya</div>
+      <div class="title">Confirm dulu ya</div>
       <div class="badge" id="confirmBadge">Hasil ucapan</div>
     </div>
-    <div class="confirm-hint">Cek heula naha kecap-kecapna geus bener. Lamun aya nu salah, bisa diédit langsung dina kolom ieu saméméh ditarjamahkeun.</div>
+    <div class="confirm-hint">Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
     <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
     <div class="edit-flag" id="editFlag">✎ Téks geus diédit ti hasil ucapan asli</div>
     <div class="confirm-actions">
       <button class="btn btn-primary" id="confirmBtn">Konfirmasi &amp; Pilih Tingkatan</button>
-      <button class="btn btn-ghost" id="rerecordBtn">Rékam Deui</button>
+      <button class="btn btn-ghost" id="rerecordBtn">Rekan lagi</button>
     </div>
   </div>
 
@@ -461,21 +461,21 @@
     <div class="picker-header">
       <div class="title">Pilih Tingkatan Basa</div>
     </div>
-    <div class="picker-hint">Rék ditarjamahkeun kana tingkatan nu mana?</div>
+    <div class="picker-hint">Ingin diterjemahkan ke tingkatan yang mana?</div>
     <div class="level-options">
       <button class="level-option" data-level="loma">
         <span class="lvl-name">Loma</span>
-        <span class="lvl-desc">Basa akrab, kanggo batur sabaya atawa kolega deukeut</span>
+        <span class="lvl-desc">Bahasa akrab, untuk teman sebaya</span>
         <span class="lvl-arrow">→</span>
       </button>
       <button class="level-option" data-level="sedeng">
         <span class="lvl-name">Sedeng</span>
-        <span class="lvl-desc">Basa sedeng-sedeng, kanggo situasi umum nu netral</span>
+        <span class="lvl-desc">Bahasa sedeng, untuk situasi umum yang netral</span>
         <span class="lvl-arrow">→</span>
       </button>
       <button class="level-option" data-level="lemes">
         <span class="lvl-name">Lemes</span>
-        <span class="lvl-desc">Basa hormat, kanggo nu leuwih sepuh atawa dihormat</span>
+        <span class="lvl-desc">Bahasa hormat, untuk yang lebih tua atau yang dihormati</span>
         <span class="lvl-arrow">→</span>
       </button>
     </div>
@@ -484,15 +484,15 @@
   <!-- STEP 4: HASIL (hiji tingkatan wungkul) -->
   <div class="result-section" id="resultSection">
     <div class="result-header">
-      <div class="title">Hasil Tarjamahan</div>
+      <div class="title">Hasil Terjemahan</div>
       <div class="badge" id="resultBadge">Loma</div>
     </div>
     <div class="result-level-tag" id="resultLevelTag" data-level="loma">Loma</div>
-    <div class="result-text" id="resultText"><span class="placeholder">Nuju narjamahkeun...</span></div>
+    <div class="result-text" id="resultText"><span class="placeholder">Sedang diterjemahkan...</span></div>
     <div class="result-actions">
       <button class="result-play" id="resultPlayBtn" disabled aria-label="Dengekeun hasil">▶</button>
       <button class="btn btn-ghost" id="changeLevelBtn">Ganti Tingkatan</button>
-      <button class="btn btn-ghost" id="rerecordBtn2">Rékam Deui</button>
+      <button class="btn btn-ghost" id="rerecordBtn2">Rekam lagi</button>
     </div>
   </div>
 
