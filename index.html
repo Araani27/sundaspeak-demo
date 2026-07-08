@@ -156,7 +156,7 @@
   }
 
   /* ---------- CONFIRM STEP ---------- */
-  .confirm-section {
+  .confirm-section, .level-picker-section, .result-section {
     display: none;
     background: var(--bg-panel);
     border: 1px solid var(--gold);
@@ -166,28 +166,28 @@
     animation: appear 0.3s ease;
   }
 
-  .confirm-section.show { display: block; }
+  .confirm-section.show, .level-picker-section.show, .result-section.show { display: block; }
 
   @keyframes appear {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .confirm-header {
+  .confirm-header, .picker-header, .result-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 14px;
   }
 
-  .confirm-header .title {
+  .confirm-header .title, .picker-header .title, .result-header .title {
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 600;
     color: var(--gold-soft);
   }
 
-  .confirm-header .badge {
+  .confirm-header .badge, .result-header .badge {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -198,7 +198,7 @@
     border-radius: 100px;
   }
 
-  .confirm-hint {
+  .confirm-hint, .picker-hint {
     font-size: 13px;
     color: var(--cream-dim);
     margin-bottom: 14px;
@@ -268,81 +268,102 @@
 
   .edit-flag.show { display: block; }
 
-  /* ---------- LEVEL STAIRS (signature element) ---------- */
-  .stairs-label {
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cream-dim);
-    margin: 8px 0 18px;
-    text-align: center;
-  }
-
-  .stairs {
+  /* ---------- LEVEL PICKER (ganti stairs) ---------- */
+  .level-options {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 32px;
   }
 
-  .step {
-    background: var(--bg-panel);
+  .level-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-panel-raised);
     border: 1px solid var(--line);
     border-left: 4px solid transparent;
     border-radius: 10px;
-    padding: 18px 20px;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 16px;
-    opacity: 0.45;
-    transform: translateY(0);
-    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    padding: 16px 20px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--cream);
+    font-family: var(--font-body);
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
   }
 
-  /* Undak = tangga: tiap level sedikit lebih "naik" & lebih lebar, Lemes paling halus/tertinggi */
-  .step[data-level="loma"]   { margin-left: 0;   border-left-color: var(--loma); }
-  .step[data-level="sedeng"] { margin-left: 18px; border-left-color: var(--sedeng); }
-  .step[data-level="lemes"]  { margin-left: 36px; border-left-color: var(--lemes); }
-
-  .step.active {
-    opacity: 1;
-    background: var(--bg-panel-raised);
+  .level-option:hover {
+    transform: translateX(2px);
+    background: var(--bg-panel);
   }
 
-  .step.pending {
-    opacity: 0.3;
+  .level-option:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
   }
 
-  .step-tag {
+  .level-option[data-level="loma"]   { border-left-color: var(--loma); }
+  .level-option[data-level="sedeng"] { border-left-color: var(--sedeng); }
+  .level-option[data-level="lemes"]  { border-left-color: var(--lemes); }
+
+  .level-option .lvl-name {
     font-family: var(--font-display);
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 600;
-    color: var(--cream);
-    width: 64px;
+    width: 76px;
+    flex-shrink: 0;
   }
 
-  .step[data-level="loma"] .step-tag   { color: var(--loma); }
-  .step[data-level="sedeng"] .step-tag { color: var(--sedeng); }
-  .step[data-level="lemes"] .step-tag  { color: var(--lemes); }
+  .level-option[data-level="loma"] .lvl-name   { color: var(--loma); }
+  .level-option[data-level="sedeng"] .lvl-name { color: var(--sedeng); }
+  .level-option[data-level="lemes"] .lvl-name  { color: var(--lemes); }
 
-  .step-output {
+  .level-option .lvl-desc {
+    font-size: 13px;
+    color: var(--cream-dim);
+    flex: 1;
+  }
+
+  .level-option .lvl-arrow {
+    color: var(--cream-dim);
     font-size: 16px;
-    color: var(--cream);
-    min-height: 24px;
   }
 
-  .step-output .placeholder {
+  /* ---------- RESULT CARD (satu level yang dipilih) ---------- */
+  .result-level-tag {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .result-level-tag[data-level="loma"]   { color: var(--loma); }
+  .result-level-tag[data-level="sedeng"] { color: var(--sedeng); }
+  .result-level-tag[data-level="lemes"]  { color: var(--lemes); }
+
+  .result-text {
+    font-size: 19px;
+    color: var(--cream);
+    line-height: 1.5;
+    min-height: 28px;
+    margin-bottom: 20px;
+  }
+
+  .result-text .placeholder {
     color: var(--cream-dim);
     font-style: italic;
-    font-size: 13px;
+    font-size: 14px;
   }
 
-  .step-play {
-    width: 32px;
-    height: 32px;
+  .result-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .result-play {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px solid var(--line);
     background: transparent;
@@ -351,14 +372,14 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     flex-shrink: 0;
     transition: border-color 0.15s ease, color 0.15s ease;
   }
 
-  .step-play:hover { border-color: var(--gold); color: var(--gold); }
-  .step-play:disabled { opacity: 0.3; cursor: default; }
-  .step-play:disabled:hover { border-color: var(--line); color: var(--cream-dim); }
+  .result-play:hover { border-color: var(--gold); color: var(--gold); }
+  .result-play:disabled { opacity: 0.3; cursor: default; }
+  .result-play:disabled:hover { border-color: var(--line); color: var(--cream-dim); }
 
   /* ---------- FOOTER NOTE ---------- */
   .meta-note {
@@ -374,16 +395,16 @@
   }
 
   @media (max-width: 520px) {
-    .step[data-level="sedeng"] { margin-left: 9px; }
-    .step[data-level="lemes"]  { margin-left: 18px; }
     .record-row { flex-wrap: wrap; }
     .record-status { width: 100%; text-align: left; margin-top: 4px; }
+    .level-option { padding: 14px 16px; gap: 12px; }
+    .level-option .lvl-name { width: 62px; font-size: 15px; }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .mic-btn.recording { animation: none; }
-    .confirm-section, .step { transition: none; animation: none; }
+    .confirm-section, .level-picker-section, .result-section, .level-option { transition: none; animation: none; }
   }
 
   /* Focus visibility */
@@ -400,7 +421,7 @@
   <div class="hero">
     <div class="eyebrow">Demo Skripsi · Speech-to-Speech</div>
     <h1>Ti basa <em>Indonesia</em><br>ka Undak-Usuk Sunda</h1>
-    <p>Ucapkeun hiji kalimah, sistem bakal narjamahkeunana kana tilu tingkatan basa Sunda: Loma, Sedeng, jeung Lemes.</p>
+    <p>Ucapkeun hiji kalimah, terus pilih hiji tingkatan basa Sunda nu dipikahoyong: Loma, Sedeng, atawa Lemes.</p>
   </div>
 
   <!-- STEP 1: RECORD -->
@@ -430,28 +451,48 @@
     <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
     <div class="edit-flag" id="editFlag">✎ Téks geus diédit ti hasil ucapan asli</div>
     <div class="confirm-actions">
-      <button class="btn btn-primary" id="confirmBtn">Konfirmasi &amp; Tarjamahkeun</button>
+      <button class="btn btn-primary" id="confirmBtn">Konfirmasi &amp; Pilih Tingkatan</button>
       <button class="btn btn-ghost" id="rerecordBtn">Rékam Deui</button>
     </div>
   </div>
 
-  <!-- STEP 3: RESULTS (the "undak" stairs) -->
-  <div class="stairs-label">Hasil Tarjamahan · Tilu Undak Basa</div>
-  <div class="stairs" id="stairs">
-    <div class="step pending" data-level="loma">
-      <div class="step-tag">Loma</div>
-      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
-      <button class="step-play" disabled aria-label="Dengekeun Loma">▶</button>
+  <!-- STEP 3: PILIH TINGKATAN -->
+  <div class="level-picker-section" id="levelPickerSection">
+    <div class="picker-header">
+      <div class="title">Pilih Tingkatan Basa</div>
     </div>
-    <div class="step pending" data-level="sedeng">
-      <div class="step-tag">Sedeng</div>
-      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
-      <button class="step-play" disabled aria-label="Dengekeun Sedeng">▶</button>
+    <div class="picker-hint">Rék ditarjamahkeun kana tingkatan nu mana?</div>
+    <div class="level-options">
+      <button class="level-option" data-level="loma">
+        <span class="lvl-name">Loma</span>
+        <span class="lvl-desc">Basa akrab, kanggo batur sabaya atawa kolega deukeut</span>
+        <span class="lvl-arrow">→</span>
+      </button>
+      <button class="level-option" data-level="sedeng">
+        <span class="lvl-name">Sedeng</span>
+        <span class="lvl-desc">Basa sedeng-sedeng, kanggo situasi umum nu netral</span>
+        <span class="lvl-arrow">→</span>
+      </button>
+      <button class="level-option" data-level="lemes">
+        <span class="lvl-name">Lemes</span>
+        <span class="lvl-desc">Basa hormat, kanggo nu leuwih sepuh atawa dihormat</span>
+        <span class="lvl-arrow">→</span>
+      </button>
     </div>
-    <div class="step pending" data-level="lemes">
-      <div class="step-tag">Lemes</div>
-      <div class="step-output"><span class="placeholder">Nungguan...</span></div>
-      <button class="step-play" disabled aria-label="Dengekeun Lemes">▶</button>
+  </div>
+
+  <!-- STEP 4: HASIL (hiji tingkatan wungkul) -->
+  <div class="result-section" id="resultSection">
+    <div class="result-header">
+      <div class="title">Hasil Tarjamahan</div>
+      <div class="badge" id="resultBadge">Loma</div>
+    </div>
+    <div class="result-level-tag" id="resultLevelTag" data-level="loma">Loma</div>
+    <div class="result-text" id="resultText"><span class="placeholder">Nuju narjamahkeun...</span></div>
+    <div class="result-actions">
+      <button class="result-play" id="resultPlayBtn" disabled aria-label="Dengekeun hasil">▶</button>
+      <button class="btn btn-ghost" id="changeLevelBtn">Ganti Tingkatan</button>
+      <button class="btn btn-ghost" id="rerecordBtn2">Rékam Deui</button>
     </div>
   </div>
 
@@ -469,7 +510,7 @@
   // Ganti nilai ini kalau alamat Space Hugging Face kamu berbeda/berubah.
   const API_BASE = 'https://zahrafakhirah27-sundaspeak-backend.hf.space';
 
-  const LEVELS = ['Loma', 'Sedeng', 'Lemes']; // huruf besar di awal, sesuai aturan API
+  const LEVEL_LABELS = { loma: 'Loma', sedeng: 'Sedeng', lemes: 'Lemes' }; // huruf besar di awal, sesuai aturan API
 
   // ===================================================================
   // STATE
@@ -478,18 +519,31 @@
   let audioChunks = [];
   let isRecording = false;
   let originalTranscript = "";
+  let currentText = "";      // teks final Indonesia yang sudah dikonfirmasi
+  let currentLevel = null;   // level yang lagi aktif ditampilkan
 
   const micBtn = document.getElementById('micBtn');
   const recordStatus = document.getElementById('recordStatus');
   const recordLabel = document.getElementById('recordLabel');
   const recordSub = document.getElementById('recordSub');
+
   const confirmSection = document.getElementById('confirmSection');
   const confirmBadge = document.getElementById('confirmBadge');
   const transcriptBox = document.getElementById('transcriptBox');
   const editFlag = document.getElementById('editFlag');
   const confirmBtn = document.getElementById('confirmBtn');
   const rerecordBtn = document.getElementById('rerecordBtn');
-  const stairs = document.getElementById('stairs');
+  const rerecordBtn2 = document.getElementById('rerecordBtn2');
+
+  const levelPickerSection = document.getElementById('levelPickerSection');
+  const levelOptionBtns = document.querySelectorAll('.level-option');
+
+  const resultSection = document.getElementById('resultSection');
+  const resultBadge = document.getElementById('resultBadge');
+  const resultLevelTag = document.getElementById('resultLevelTag');
+  const resultText = document.getElementById('resultText');
+  const resultPlayBtn = document.getElementById('resultPlayBtn');
+  const changeLevelBtn = document.getElementById('changeLevelBtn');
 
   // ===================================================================
   // HELPER: tampilkan pesan error singkat di area rekam
@@ -504,6 +558,12 @@
     recordLabel.style.color = '';
     recordLabel.textContent = 'Pencet pikeun nyarios';
     recordSub.textContent = 'Contona: "Kamu mau pulang sekarang?"';
+  }
+
+  function hideAllSteps() {
+    confirmSection.classList.remove('show');
+    levelPickerSection.classList.remove('show');
+    resultSection.classList.remove('show');
   }
 
   // ===================================================================
@@ -556,8 +616,7 @@
 
   micBtn.addEventListener('click', function () {
     // Reset tampilan sebelum mulai siklus baru
-    confirmSection.classList.remove('show');
-    resetStairs();
+    hideAllSteps();
     resetRecordLabel();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -612,12 +671,12 @@
   }
 
   // ===================================================================
-  // STEP 2: Konfirmasi / edit teks sebelum diterjemahkan
+  // STEP 2: Konfirmasi / edit teks sebelum ditarjamahkeun
   // ===================================================================
   transcriptBox.addEventListener('input', function () {
-    const currentText = transcriptBox.value.trim();
+    const currentEdit = transcriptBox.value.trim();
 
-    if (currentText === originalTranscript.trim()) {
+    if (currentEdit === originalTranscript.trim()) {
       confirmBadge.textContent = 'Hasil ucapan';
       editFlag.classList.remove('show');
     } else {
@@ -626,32 +685,68 @@
     }
   });
 
-  rerecordBtn.addEventListener('click', function () {
-    confirmSection.classList.remove('show');
-    resetStairs();
-  });
+  function goBackToRecord() {
+    hideAllSteps();
+  }
+
+  rerecordBtn.addEventListener('click', goBackToRecord);
+  rerecordBtn2.addEventListener('click', goBackToRecord);
 
   confirmBtn.addEventListener('click', function () {
     const finalText = transcriptBox.value.trim();
     if (!finalText) return;
 
+    currentText = finalText;
     confirmSection.classList.remove('show');
-    runTranslation(finalText);
+    resultSection.classList.remove('show');
+    levelPickerSection.classList.add('show');
   });
 
   // ===================================================================
-  // STEP 3: Panggil /translate untuk tiap level (Loma, Sedeng, Lemes)
+  // STEP 3: Pilih 1 tingkatan, lalu panggil /translate cuma untuk itu
   // ===================================================================
-  function resetStairs() {
-    document.querySelectorAll('.step').forEach(function (step) {
-      step.classList.remove('active');
-      step.classList.add('pending');
-      const out = step.querySelector('.step-output');
-      out.innerHTML = '<span class="placeholder">Nungguan...</span>';
-      const btn = step.querySelector('.step-play');
-      btn.disabled = true;
-      btn.onclick = null;
+  levelOptionBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const levelKey = btn.getAttribute('data-level');
+      selectLevel(levelKey);
     });
+  });
+
+  changeLevelBtn.addEventListener('click', function () {
+    resultSection.classList.remove('show');
+    levelPickerSection.classList.add('show');
+  });
+
+  function selectLevel(levelKey) {
+    currentLevel = levelKey;
+    const levelLabel = LEVEL_LABELS[levelKey];
+
+    levelPickerSection.classList.remove('show');
+    resultSection.classList.add('show');
+
+    resultBadge.textContent = levelLabel;
+    resultLevelTag.textContent = levelLabel;
+    resultLevelTag.setAttribute('data-level', levelKey);
+    resultText.innerHTML = '<span class="placeholder">Nuju narjamahkeun...</span>';
+    resultPlayBtn.disabled = true;
+    resultPlayBtn.onclick = null;
+
+    translateOneLevel(currentText, levelLabel)
+      .then(function (data) {
+        // Pastikan hasil ieu masih pikeun level nu keur aktif (jaga-jaga lamun user gancang ganti)
+        if (currentLevel !== levelKey) return;
+        resultText.textContent = data.text_sunda;
+        if (data.audio_id) {
+          resultPlayBtn.disabled = false;
+          resultPlayBtn.onclick = function () { playSundaneseAudio(data.audio_id, resultPlayBtn); };
+        }
+      })
+      .catch(function (err) {
+        console.error('Gagal tarjamah level ' + levelLabel + ':', err);
+        if (currentLevel !== levelKey) return;
+        resultText.innerHTML = '<span class="placeholder">Gagal narjamahkeun (' + (err.message || 'error') + ')</span>';
+        resultPlayBtn.disabled = true;
+      });
   }
 
   async function translateOneLevel(text, level) {
@@ -673,38 +768,8 @@
     return res.json(); // { text_indo, text_sunda, level, audio_id }
   }
 
-  async function runTranslation(text) {
-    LEVELS.forEach(async function (level) {
-      const key = level.toLowerCase();
-      const step = stairs.querySelector('[data-level="' + key + '"]');
-      const out = step.querySelector('.step-output');
-      const btn = step.querySelector('.step-play');
-
-      try {
-        const data = await translateOneLevel(text, level);
-
-        step.classList.remove('pending');
-        step.classList.add('active');
-        out.textContent = data.text_sunda;
-
-        if (data.audio_id) {
-          btn.disabled = false;
-          btn.onclick = function () { playSundaneseAudio(data.audio_id, btn); };
-        } else {
-          btn.disabled = true;
-        }
-      } catch (err) {
-        console.error('Gagal tarjamah level ' + level + ':', err);
-        step.classList.remove('pending');
-        step.classList.add('active');
-        out.innerHTML = '<span class="placeholder">Gagal narjamahkeun (' + (err.message || 'error') + ')</span>';
-        btn.disabled = true;
-      }
-    });
-  }
-
   // ===================================================================
-  // TTS: putar audio hasil sungguhan dari server (bukan browser TTS lagi)
+  // TTS: putar audio hasil sungguhan dari server
   // ===================================================================
   let currentAudio = null;
 
