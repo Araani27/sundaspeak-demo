@@ -449,17 +449,17 @@
     </div>
     <div class="confirm-hint">Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
     <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
-    <div class="edit-flag" id="editFlag">✎ Téks geus diédit ti hasil ucapan asli</div>
+    <div class="edit-flag" id="editFlag">✎ Teks sudah diedit dari hasil ucapan asli</div>
     <div class="confirm-actions">
       <button class="btn btn-primary" id="confirmBtn">Konfirmasi &amp; Pilih Tingkatan</button>
-      <button class="btn btn-ghost" id="rerecordBtn">Rekan lagi</button>
+      <button class="btn btn-ghost" id="rerecordBtn">Rekam lagi</button>
     </div>
   </div>
 
   <!-- STEP 3: PILIH TINGKATAN -->
   <div class="level-picker-section" id="levelPickerSection">
     <div class="picker-header">
-      <div class="title">Pilih Tingkatan Basa</div>
+      <div class="title">Pilih Tingkatan Bahsa</div>
     </div>
     <div class="picker-hint">Ingin diterjemahkan ke tingkatan yang mana?</div>
     <div class="level-options">
@@ -490,7 +490,7 @@
     <div class="result-level-tag" id="resultLevelTag" data-level="loma">Loma</div>
     <div class="result-text" id="resultText"><span class="placeholder">Sedang diterjemahkan...</span></div>
     <div class="result-actions">
-      <button class="result-play" id="resultPlayBtn" disabled aria-label="Dengekeun hasil">▶</button>
+      <button class="result-play" id="resultPlayBtn" disabled aria-label="Dengarkan hasil">▶</button>
       <button class="btn btn-ghost" id="changeLevelBtn">Ganti Tingkatan</button>
       <button class="btn btn-ghost" id="rerecordBtn2">Rekam lagi</button>
     </div>
@@ -594,12 +594,12 @@
       mediaRecorder.start();
       isRecording = true;
       micBtn.classList.add('recording');
-      recordStatus.textContent = 'Ngadengekeun...';
-      recordLabel.textContent = 'Nuju ngarékam...';
-      recordSub.textContent = 'Pencet deui lamun geus rengse nyarios';
+      recordStatus.textContent = 'Mendengarkan...';
+      recordLabel.textContent = 'Sedang mendengarkan...';
+      recordSub.textContent = 'Tekan lagi kalau sudah selesai berbicara';
     } catch (err) {
       console.error('Gagal akses mikrofon:', err);
-      showRecordError('Teu bisa akses mikrofon. Cek idin browser.');
+      showRecordError('Tidak bisa akses mikrofon. Cek izin browser.');
     }
   }
 
@@ -608,8 +608,8 @@
       isRecording = false;
       micBtn.classList.remove('recording');
       recordStatus.textContent = 'Diproses...';
-      recordLabel.textContent = 'Nuju ditranskrip...';
-      recordSub.textContent = 'Tunggu sakedap nya';
+      recordLabel.textContent = 'Sedang ditranskrip...';
+      recordSub.textContent = 'Tunggu sebentar nya';
       mediaRecorder.stop();
     }
   }
@@ -620,7 +620,7 @@
     resetRecordLabel();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showRecordError('Browser ieu teu ngadukung rékam audio.');
+      showRecordError('Browser ini tidak mendukung rekam audio.');
       return;
     }
 
@@ -652,9 +652,9 @@
     } catch (err) {
       console.error('Gagal transcribe:', err);
       recordStatus.textContent = 'Gagal';
-      recordLabel.textContent = 'Transkrip gagal, cobi deui';
+      recordLabel.textContent = 'Transkrip gagal, coba lagi';
       recordLabel.style.color = 'var(--danger)';
-      recordSub.textContent = err.message || 'Aya masalah nyambungkeun ka server.';
+      recordSub.textContent = err.message || 'Ada masalah menyambungkan ke server.';
     }
   }
 
@@ -680,7 +680,7 @@
       confirmBadge.textContent = 'Hasil ucapan';
       editFlag.classList.remove('show');
     } else {
-      confirmBadge.textContent = 'Geus diédit';
+      confirmBadge.textContent = 'Sudah diedit';
       editFlag.classList.add('show');
     }
   });
@@ -727,7 +727,7 @@
     resultBadge.textContent = levelLabel;
     resultLevelTag.textContent = levelLabel;
     resultLevelTag.setAttribute('data-level', levelKey);
-    resultText.innerHTML = '<span class="placeholder">Nuju narjamahkeun...</span>';
+    resultText.innerHTML = '<span class="placeholder">Sedang diterjemahkan...</span>';
     resultPlayBtn.disabled = true;
     resultPlayBtn.onclick = null;
 
