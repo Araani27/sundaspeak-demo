@@ -288,12 +288,14 @@
     text-align: left;
     color: var(--cream);
     font-family: var(--font-body);
-    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   }
 
   .level-option:hover {
-    transform: translateX(2px);
+    transform: translateX(4px);
     background: var(--bg-panel);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
   }
 
   .level-option:disabled {
@@ -302,9 +304,10 @@
     transform: none;
   }
 
+  /* Anak tangga: makin tinggi tingkatannya, makin masuk ke kanan — memvisualisasikan undak-usuk */
   .level-option[data-level="loma"]   { border-left-color: var(--loma); }
-  .level-option[data-level="sedeng"] { border-left-color: var(--sedeng); }
-  .level-option[data-level="lemes"]  { border-left-color: var(--lemes); }
+  .level-option[data-level="sedeng"] { border-left-color: var(--sedeng); margin-left: 18px; }
+  .level-option[data-level="lemes"]  { border-left-color: var(--lemes); margin-left: 36px; }
 
   .level-option .lvl-name {
     font-family: var(--font-display);
@@ -329,12 +332,53 @@
     font-size: 16px;
   }
 
-  /* ---------- RESULT CARD (satu level yang dipilih) ---------- */
+  /* ---------- RESULT CARD (satu level yang dipilih, tampilan bertumpuk) ---------- */
+  .result-block {
+    padding: 4px 0;
+  }
+
+  .result-block-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    margin-bottom: 6px;
+  }
+
+  .result-block-source .result-block-text {
+    font-size: 16px;
+    color: var(--cream-dim);
+    line-height: 1.5;
+  }
+
+  /* Pemisah bertema warna sesuai tingkatan, menandakan proses "naik" dari Indonesia ke Sunda */
+  .result-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+    color: var(--cream-dim);
+    font-size: 13px;
+  }
+
+  .result-divider::before,
+  .result-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .result-divider[data-level="loma"]   { color: var(--loma); }
+  .result-divider[data-level="sedeng"] { color: var(--sedeng); }
+  .result-divider[data-level="lemes"]  { color: var(--lemes); }
+
   .result-level-tag {
     font-family: var(--font-display);
     font-size: 22px;
     font-weight: 600;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
 
   .result-level-tag[data-level="loma"]   { color: var(--loma); }
@@ -342,7 +386,8 @@
   .result-level-tag[data-level="lemes"]  { color: var(--lemes); }
 
   .result-text {
-    font-size: 19px;
+    font-size: 20px;
+    font-weight: 500;
     color: var(--cream);
     line-height: 1.5;
     min-height: 28px;
@@ -352,6 +397,7 @@
   .result-text .placeholder {
     color: var(--cream-dim);
     font-style: italic;
+    font-weight: 400;
     font-size: 14px;
   }
 
@@ -399,6 +445,8 @@
     .record-status { width: 100%; text-align: left; margin-top: 4px; }
     .level-option { padding: 14px 16px; gap: 12px; }
     .level-option .lvl-name { width: 62px; font-size: 15px; }
+    .level-option[data-level="sedeng"] { margin-left: 8px; }
+    .level-option[data-level="lemes"]  { margin-left: 16px; }
   }
 
   /* Reduced motion */
@@ -421,13 +469,13 @@
   <div class="hero">
     <div class="eyebrow">Speech-to-Speech</div>
     <h1>Dari Bahasa <em>Indonesia</em><br>ke Undak-Usuk Sunda</h1>
-    <p>Ucapkan satu kalimat, terus pilih satu tingkatan basa Sunda yang diinginkan: Loma, Sedeng, atawa Lemes.</p>
+    <p>Ucapkan satu kalimat, lalu pilih satu tingkatan bahasa Sunda yang diinginkan: Loma, Sedeng, atau Lemes.</p>
   </div>
 
   <!-- STEP 1: RECORD -->
   <div class="record-card">
     <div class="record-row">
-      <button class="mic-btn" id="micBtn" aria-label="Mimitan ngarékam">
+      <button class="mic-btn" id="micBtn" aria-label="Mulai merekam">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" id="micIcon">
           <path d="M12 14a3 3 0 003-3V6a3 3 0 10-6 0v5a3 3 0 003 3z" fill="currentColor"/>
           <path d="M19 11a7 7 0 01-14 0M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -444,7 +492,7 @@
   <!-- STEP 2: CONFIRM / EDIT TRANSCRIPT -->
   <div class="confirm-section" id="confirmSection">
     <div class="confirm-header">
-      <div class="title">Confirm dulu ya</div>
+      <div class="title">Konfirmasi Dulu, Yuk</div>
       <div class="badge" id="confirmBadge">Hasil ucapan</div>
     </div>
     <div class="confirm-hint">Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
@@ -459,7 +507,7 @@
   <!-- STEP 3: PILIH TINGKATAN -->
   <div class="level-picker-section" id="levelPickerSection">
     <div class="picker-header">
-      <div class="title">Pilih Tingkatan Bahsa</div>
+      <div class="title">Pilih Tingkatan Bahasa</div>
     </div>
     <div class="picker-hint">Ingin diterjemahkan ke tingkatan yang mana?</div>
     <div class="level-options">
@@ -487,8 +535,17 @@
       <div class="title">Hasil Terjemahan</div>
       <div class="badge" id="resultBadge">Loma</div>
     </div>
-    <div class="result-level-tag" id="resultLevelTag" data-level="loma">Loma</div>
-    <div class="result-text" id="resultText"><span class="placeholder">Sedang diterjemahkan...</span></div>
+    <div class="result-block result-block-source">
+      <div class="result-block-label">Bahasa Indonesia</div>
+      <div class="result-block-text" id="resultSourceText"></div>
+    </div>
+
+    <div class="result-divider" id="resultDivider" data-level="loma">↓ diterjemahkan ke</div>
+
+    <div class="result-block">
+      <div class="result-level-tag" id="resultLevelTag" data-level="loma">Loma</div>
+      <div class="result-text" id="resultText"><span class="placeholder">Sedang diterjemahkan...</span></div>
+    </div>
     <div class="result-actions">
       <button class="result-play" id="resultPlayBtn" disabled aria-label="Dengarkan hasil">▶</button>
       <button class="btn btn-ghost" id="changeLevelBtn">Ganti Tingkatan</button>
@@ -521,6 +578,7 @@
   let originalTranscript = "";
   let currentText = "";      // teks final Indonesia yang sudah dikonfirmasi
   let currentLevel = null;   // level yang lagi aktif ditampilkan
+  let translationCache = {}; // { Loma: Promise, Sedeng: Promise, Lemes: Promise } untuk currentText saat ini
 
   const micBtn = document.getElementById('micBtn');
   const recordStatus = document.getElementById('recordStatus');
@@ -540,6 +598,8 @@
 
   const resultSection = document.getElementById('resultSection');
   const resultBadge = document.getElementById('resultBadge');
+  const resultSourceText = document.getElementById('resultSourceText');
+  const resultDivider = document.getElementById('resultDivider');
   const resultLevelTag = document.getElementById('resultLevelTag');
   const resultText = document.getElementById('resultText');
   const resultPlayBtn = document.getElementById('resultPlayBtn');
@@ -556,8 +616,8 @@
 
   function resetRecordLabel() {
     recordLabel.style.color = '';
-    recordLabel.textContent = 'Pencet pikeun nyarios';
-    recordSub.textContent = 'Contona: "Kamu mau pulang sekarang?"';
+    recordLabel.textContent = 'Tekan untuk berbicara';
+    recordSub.textContent = 'Contohnya: "Kamu mau pulang sekarang?"';
   }
 
   function hideAllSteps() {
@@ -700,7 +760,19 @@
     confirmSection.classList.remove('show');
     resultSection.classList.remove('show');
     levelPickerSection.classList.add('show');
+
+    // Percepatan: langsung minta terjemahan ke 3 tingkatan sekaligus di latar belakang,
+    // selagi orang masih mikir mau pilih tingkatan yang mana. Begitu tingkatan dipilih,
+    // hasilnya biasanya sudah siap (atau hampir siap), bukan menunggu dari nol.
+    prefetchAllLevels(currentText);
   });
+
+  function prefetchAllLevels(text) {
+    translationCache = {};
+    Object.values(LEVEL_LABELS).forEach(function (levelLabel) {
+      translationCache[levelLabel] = translateOneLevel(text, levelLabel);
+    });
+  }
 
   // ===================================================================
   // STEP 3: Pilih 1 tingkatan, lalu panggil /translate cuma untuk itu
@@ -725,15 +797,20 @@
     resultSection.classList.add('show');
 
     resultBadge.textContent = levelLabel;
+    resultSourceText.textContent = currentText;
+    resultDivider.setAttribute('data-level', levelKey);
     resultLevelTag.textContent = levelLabel;
     resultLevelTag.setAttribute('data-level', levelKey);
     resultText.innerHTML = '<span class="placeholder">Sedang diterjemahkan...</span>';
     resultPlayBtn.disabled = true;
     resultPlayBtn.onclick = null;
 
-    translateOneLevel(currentText, levelLabel)
+    // Pakai hasil yang sudah di-prefetch kalau ada, kalau belum baru minta baru
+    const pending = translationCache[levelLabel] || translateOneLevel(currentText, levelLabel);
+
+    pending
       .then(function (data) {
-        // Pastikan hasil ieu masih pikeun level nu keur aktif (jaga-jaga lamun user gancang ganti)
+        // Pastikan hasil ini masih untuk tingkatan yang sedang aktif (jaga-jaga kalau orang cepat ganti pilihan)
         if (currentLevel !== levelKey) return;
         resultText.textContent = data.text_sunda;
         if (data.audio_id) {
@@ -742,9 +819,9 @@
         }
       })
       .catch(function (err) {
-        console.error('Gagal tarjamah level ' + levelLabel + ':', err);
+        console.error('Gagal menerjemahkan level ' + levelLabel + ':', err);
         if (currentLevel !== levelKey) return;
-        resultText.innerHTML = '<span class="placeholder">Gagal narjamahkeun (' + (err.message || 'error') + ')</span>';
+        resultText.innerHTML = '<span class="placeholder">Gagal menerjemahkan (' + (err.message || 'error') + ')</span>';
         resultPlayBtn.disabled = true;
       });
   }
