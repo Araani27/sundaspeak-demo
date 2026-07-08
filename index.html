@@ -422,7 +422,6 @@
     <div class="eyebrow">Demo Skripsi · Speech-to-Speech</div>
     <h1>Ti basa <em>Indonesia</em><br>ka Undak-Usuk Sunda</h1>
     <p>Ucapkeun hiji kalimah, terus pilih hiji tingkatan basa Sunda nu dipikahoyong: Loma, Sedeng, atawa Lemes.</p>
-    <p>Ucapkan satu kalimat, terus pilih satu tingkatan basa Sunda yang diinginkan: Loma, Sedeng, atawa Lemes.</p>
   </div>
 
   <!-- STEP 1: RECORD -->
@@ -436,7 +435,7 @@
       </button>
       <div class="record-info">
         <div class="label" id="recordLabel">Pencet pikeun nyarios</div>
-       <div class="label" id="recordLabel">Pencet untuk berbicara</div>
+        <div class="sub" id="recordSub">Contona: "Kamu mau pulang sekarang?"</div>
       </div>
       <div class="record-status" id="recordStatus">Siap</div>
     </div>
@@ -449,7 +448,6 @@
       <div class="badge" id="confirmBadge">Hasil ucapan</div>
     </div>
     <div class="confirm-hint">Cek heula naha kecap-kecapna geus bener. Lamun aya nu salah, bisa diédit langsung dina kolom ieu saméméh ditarjamahkeun.</div>
-    <div class="confirm-hint">Cek terlebih dahulu kalimatnya sudah benar. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
     <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
     <div class="edit-flag" id="editFlag">✎ Téks geus diédit ti hasil ucapan asli</div>
     <div class="confirm-actions">
@@ -467,17 +465,17 @@
     <div class="level-options">
       <button class="level-option" data-level="loma">
         <span class="lvl-name">Loma</span>
-        <span class="lvl-desc">Basa akrab, kanggo batur sabaya atawa kolega deukeut (akrab)</span>
+        <span class="lvl-desc">Basa akrab, kanggo batur sabaya atawa kolega deukeut</span>
         <span class="lvl-arrow">→</span>
       </button>
       <button class="level-option" data-level="sedeng">
         <span class="lvl-name">Sedeng</span>
-        <span class="lvl-desc">Basa sedeng, kanggo situasi umum nu netral</span>
+        <span class="lvl-desc">Basa sedeng-sedeng, kanggo situasi umum nu netral</span>
         <span class="lvl-arrow">→</span>
       </button>
       <button class="level-option" data-level="lemes">
         <span class="lvl-name">Lemes</span>
-        <span class="lvl-desc">Basa hormat, kanggo nu leuwih sepuh atawa dihormat (lebih tua)</span>
+        <span class="lvl-desc">Basa hormat, kanggo nu leuwih sepuh atawa dihormat</span>
         <span class="lvl-arrow">→</span>
       </button>
     </div>
