@@ -483,7 +483,7 @@
       </button>
       <div class="record-info">
         <div class="label" id="recordLabel">Tekan untuk berbicara</div>
-        <div class="sub" id="recordSub"></div>
+        <div class="sub" id="recordSub">Rekaman akan otomatis berhenti saat Anda tekan lagi</div>
       </div>
       <div class="record-status" id="recordStatus"></div>
     </div>
@@ -529,7 +529,7 @@
     </div>
   </div>
 
-  <!-- STEP 4: HASIL (hiji tingkatan wungkul) -->
+  <!-- STEP 4: HASIL (satu tingkatan saja) -->
   <div class="result-section" id="resultSection">
     <div class="result-header">
       <div class="title">Hasil Terjemahan</div>
@@ -617,7 +617,7 @@
   function resetRecordLabel() {
     recordLabel.style.color = '';
     recordLabel.textContent = 'Tekan untuk berbicara';
-    recordSub.textContent = 'Contohnya: "Kamu mau pulang sekarang?"';
+    recordSub.textContent = 'Rekaman akan otomatis berhenti saat Anda tekan lagi';
   }
 
   function hideAllSteps() {
@@ -719,7 +719,7 @@
   }
 
   function handleTranscriptReady(text) {
-    recordStatus.textContent = 'Siap';
+    recordStatus.textContent = '✓';
     resetRecordLabel();
 
     originalTranscript = text;
@@ -731,7 +731,7 @@
   }
 
   // ===================================================================
-  // STEP 2: Konfirmasi / edit teks sebelum ditarjamahkeun
+  // STEP 2: Konfirmasi / edit teks sebelum diterjemahkan
   // ===================================================================
   transcriptBox.addEventListener('input', function () {
     const currentEdit = transcriptBox.value.trim();
