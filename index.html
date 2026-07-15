@@ -46,6 +46,41 @@
     padding: 48px 24px 80px;
   }
 
+  /* ---------- LANG SWITCH ---------- */
+  .lang-switch {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+
+  .lang-opt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--cream-dim);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .lang-opt.active {
+    background: var(--gold);
+    color: var(--bg-deep);
+    border-color: var(--gold);
+  }
+
+  .lang-opt:hover:not(.active) {
+    border-color: var(--cream-dim);
+    color: var(--cream);
+  }
+
   /* ---------- HERO ---------- */
   .hero {
     text-align: center;
@@ -466,10 +501,15 @@
 
 <div class="wrap">
 
+  <div class="lang-switch" id="langSwitch">
+    <button class="lang-opt active" data-lang="id" aria-label="Bahasa Indonesia">🇮🇩 ID</button>
+    <button class="lang-opt" data-lang="en" aria-label="English">🇬🇧 EN</button>
+  </div>
+
   <div class="hero">
-    <div class="eyebrow">Speech-to-Speech</div>
-    <h1>Dari Bahasa <em>Indonesia</em><br>ke Undak-Usuk Sunda</h1>
-    <p>Ucapkan satu kalimat, lalu pilih satu tingkatan bahasa Sunda yang diinginkan: Loma, Sedeng, atau Lemes.</p>
+    <div class="eyebrow" id="eyebrowText">Speech-to-Speech</div>
+    <h1 id="heroTitle">Dari Bahasa <em>Indonesia</em><br>ke Undak-Usuk Sunda</h1>
+    <p id="heroDesc">Ucapkan satu kalimat, lalu pilih satu tingkatan bahasa Sunda yang diinginkan: Loma, Sedeng, atau Lemes.</p>
   </div>
 
   <!-- STEP 1: RECORD -->
@@ -492,10 +532,10 @@
   <!-- STEP 2: CONFIRM / EDIT TRANSCRIPT -->
   <div class="confirm-section" id="confirmSection">
     <div class="confirm-header">
-      <div class="title">Konfirmasi Dulu, Yuk</div>
+      <div class="title" id="confirmTitle">Konfirmasi Dulu, Yuk</div>
       <div class="badge" id="confirmBadge">Hasil ucapan</div>
     </div>
-    <div class="confirm-hint">Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
+    <div class="confirm-hint" id="confirmHint">Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.</div>
     <textarea class="transcript-box" id="transcriptBox" rows="2"></textarea>
     <div class="edit-flag" id="editFlag">✎ Teks sudah diedit dari hasil ucapan asli</div>
     <div class="confirm-actions">
@@ -507,9 +547,9 @@
   <!-- STEP 3: PILIH TINGKATAN -->
   <div class="level-picker-section" id="levelPickerSection">
     <div class="picker-header">
-      <div class="title">Pilih Tingkatan Bahasa</div>
+      <div class="title" id="pickerTitle">Pilih Tingkatan Bahasa</div>
     </div>
-    <div class="picker-hint">Ingin diterjemahkan ke tingkatan yang mana?</div>
+    <div class="picker-hint" id="pickerHint">Ingin diterjemahkan ke tingkatan yang mana?</div>
     <div class="level-options">
       <button class="level-option" data-level="loma">
         <span class="lvl-name">Loma</span>
@@ -532,11 +572,11 @@
   <!-- STEP 4: HASIL (satu tingkatan saja) -->
   <div class="result-section" id="resultSection">
     <div class="result-header">
-      <div class="title">Hasil Terjemahan</div>
+      <div class="title" id="resultTitle">Hasil Terjemahan</div>
       <div class="badge" id="resultBadge">Loma</div>
     </div>
     <div class="result-block result-block-source">
-      <div class="result-block-label">Bahasa Indonesia</div>
+      <div class="result-block-label" id="resultBlockLabel">Bahasa Indonesia</div>
       <div class="result-block-text" id="resultSourceText"></div>
     </div>
 
@@ -553,7 +593,7 @@
     </div>
   </div>
 
-  <div class="meta-note">
+  <div class="meta-note" id="metaNote">
     Sistem Penerjemah <span>Undak-Usuk Basa Sunda</span> · Fine-tuned Llama 3 8B + QLoRA
   </div>
 
@@ -579,6 +619,11 @@
   let currentText = "";      // teks final Indonesia yang sudah dikonfirmasi
   let currentLevel = null;   // level yang lagi aktif ditampilkan
   let translationCache = {}; // { Loma: Promise, Sedeng: Promise, Lemes: Promise } untuk currentText saat ini
+
+  // ---- state bahasa UI (ID/EN) ----
+  let currentLang = 'id';
+  let recordState = 'idle';   // idle | listening | processing | done | failed
+  let isEdited = false;
 
   const micBtn = document.getElementById('micBtn');
   const recordStatus = document.getElementById('recordStatus');
@@ -606,18 +651,172 @@
   const changeLevelBtn = document.getElementById('changeLevelBtn');
 
   // ===================================================================
+  // TERJEMAHAN UI (ID/EN)
+  // ===================================================================
+  const translations = {
+    id: {
+      eyebrow: "Speech-to-Speech",
+      heroTitle: 'Dari Bahasa <em>Indonesia</em><br>ke Undak-Usuk Sunda',
+      heroDesc: "Ucapkan satu kalimat, lalu pilih satu tingkatan bahasa Sunda yang diinginkan: Loma, Sedeng, atau Lemes.",
+      recordLabelDefault: "Tekan untuk berbicara",
+      recordSubDefault: "Rekaman akan otomatis berhenti saat Anda tekan lagi",
+      recordListening: "Sedang mendengarkan...",
+      recordListeningSub: "Tekan lagi kalau sudah selesai berbicara",
+      recordStatusListening: "Mendengarkan...",
+      recordStatusProcessing: "Diproses...",
+      recordTranscribing: "Sedang ditranskrip...",
+      recordTranscribingSub: "Tunggu sebentar nya",
+      recordStatusDone: "✓",
+      recordStatusFailed: "Gagal",
+      recordFailedLabel: "Transkrip gagal, coba lagi",
+      micPermissionError: "Tidak bisa akses mikrofon. Cek izin browser.",
+      micNotSupported: "Browser ini tidak mendukung rekam audio.",
+      confirmTitle: "Konfirmasi Dulu, Yuk",
+      confirmBadgeOriginal: "Hasil ucapan",
+      confirmBadgeEdited: "Sudah diedit",
+      confirmHint: "Cek terlebih dahulu kalimatnya. Kalau ada yang salah, bisa diedit langsung di kolom ini sebelum diterjemahkan.",
+      editFlag: "✎ Teks sudah diedit dari hasil ucapan asli",
+      confirmBtn: "Konfirmasi & Pilih Tingkatan",
+      rerecordBtn: "Rekam lagi",
+      pickerTitle: "Pilih Tingkatan Bahasa",
+      pickerHint: "Ingin diterjemahkan ke tingkatan yang mana?",
+      lvlLomaDesc: "Bahasa akrab, untuk teman sebaya",
+      lvlSedengDesc: "Bahasa sedeng, untuk situasi umum yang netral",
+      lvlLemesDesc: "Bahasa hormat, untuk yang lebih tua atau yang dihormati",
+      resultTitle: "Hasil Terjemahan",
+      resultBlockLabel: "Bahasa Indonesia",
+      resultDivider: "↓ diterjemahkan ke",
+      resultPlaceholder: "Sedang diterjemahkan...",
+      resultError: "Gagal menerjemahkan",
+      changeLevelBtn: "Ganti Tingkatan",
+      metaNote: 'Sistem Penerjemah <span>Undak-Usuk Basa Sunda</span> · Fine-tuned Llama 3 8B + QLoRA'
+    },
+    en: {
+      eyebrow: "Speech-to-Speech",
+      heroTitle: 'From <em>Indonesian</em><br>to Sundanese Undak-Usuk',
+      heroDesc: "Say a sentence, then choose the Sundanese speech level you want: Loma, Sedeng, or Lemes.",
+      recordLabelDefault: "Tap to speak",
+      recordSubDefault: "Recording will stop automatically when you tap again",
+      recordListening: "Listening...",
+      recordListeningSub: "Tap again when you're done speaking",
+      recordStatusListening: "Listening...",
+      recordStatusProcessing: "Processing...",
+      recordTranscribing: "Transcribing...",
+      recordTranscribingSub: "Just a moment",
+      recordStatusDone: "✓",
+      recordStatusFailed: "Failed",
+      recordFailedLabel: "Transcription failed, try again",
+      micPermissionError: "Can't access microphone. Check browser permissions.",
+      micNotSupported: "This browser doesn't support audio recording.",
+      confirmTitle: "Let's Confirm First",
+      confirmBadgeOriginal: "Speech result",
+      confirmBadgeEdited: "Edited",
+      confirmHint: "Check the sentence first. If something's wrong, you can edit it directly in this box before translating.",
+      editFlag: "✎ Text has been edited from the original speech result",
+      confirmBtn: "Confirm & Choose Level",
+      rerecordBtn: "Record again",
+      pickerTitle: "Choose Speech Level",
+      pickerHint: "Which level would you like it translated to?",
+      lvlLomaDesc: "Casual, for peers",
+      lvlSedengDesc: "Neutral, for general situations",
+      lvlLemesDesc: "Respectful, for elders or respected people",
+      resultTitle: "Translation Result",
+      resultBlockLabel: "Indonesian",
+      resultDivider: "↓ translated to",
+      resultPlaceholder: "Translating...",
+      resultError: "Translation failed",
+      changeLevelBtn: "Change Level",
+      metaNote: 'Undak-Usuk Basa Sunda <span>Translation System</span> · Fine-tuned Llama 3 8B + QLoRA'
+    }
+  };
+
+  function t(key) { return translations[currentLang][key]; }
+
+  function renderRecordState() {
+    switch (recordState) {
+      case 'idle':
+        recordLabel.style.color = '';
+        recordLabel.textContent = t('recordLabelDefault');
+        recordSub.textContent = t('recordSubDefault');
+        recordStatus.textContent = '';
+        break;
+      case 'listening':
+        recordStatus.textContent = t('recordStatusListening');
+        recordLabel.style.color = '';
+        recordLabel.textContent = t('recordListening');
+        recordSub.textContent = t('recordListeningSub');
+        break;
+      case 'processing':
+        recordStatus.textContent = t('recordStatusProcessing');
+        recordLabel.style.color = '';
+        recordLabel.textContent = t('recordTranscribing');
+        recordSub.textContent = t('recordTranscribingSub');
+        break;
+      case 'done':
+        recordLabel.style.color = '';
+        recordLabel.textContent = t('recordLabelDefault');
+        recordSub.textContent = t('recordSubDefault');
+        recordStatus.textContent = t('recordStatusDone');
+        break;
+      case 'failed':
+        recordStatus.textContent = t('recordStatusFailed');
+        recordLabel.style.color = 'var(--danger)';
+        recordLabel.textContent = t('recordFailedLabel');
+        break;
+    }
+  }
+
+  function renderStaticText() {
+    document.getElementById('eyebrowText').textContent = t('eyebrow');
+    document.getElementById('heroTitle').innerHTML = t('heroTitle');
+    document.getElementById('heroDesc').textContent = t('heroDesc');
+    document.getElementById('confirmTitle').textContent = t('confirmTitle');
+    document.getElementById('confirmHint').textContent = t('confirmHint');
+    confirmBtn.textContent = t('confirmBtn');
+    rerecordBtn.textContent = t('rerecordBtn');
+    rerecordBtn2.textContent = t('rerecordBtn');
+    document.getElementById('pickerTitle').textContent = t('pickerTitle');
+    document.getElementById('pickerHint').textContent = t('pickerHint');
+    document.querySelector('.level-option[data-level="loma"] .lvl-desc').textContent = t('lvlLomaDesc');
+    document.querySelector('.level-option[data-level="sedeng"] .lvl-desc').textContent = t('lvlSedengDesc');
+    document.querySelector('.level-option[data-level="lemes"] .lvl-desc').textContent = t('lvlLemesDesc');
+    document.getElementById('resultTitle').textContent = t('resultTitle');
+    document.getElementById('resultBlockLabel').textContent = t('resultBlockLabel');
+    resultDivider.textContent = t('resultDivider');
+    changeLevelBtn.textContent = t('changeLevelBtn');
+    document.getElementById('metaNote').innerHTML = t('metaNote');
+    confirmBadge.textContent = isEdited ? t('confirmBadgeEdited') : t('confirmBadgeOriginal');
+    editFlag.textContent = t('editFlag');
+
+    // Kalau lagi nampilin placeholder "sedang diterjemahkan..." atau error, update juga teksnya
+    const placeholderEl = resultText.querySelector('.placeholder');
+    if (placeholderEl) {
+      resultText.innerHTML = '<span class="placeholder">' + t('resultPlaceholder') + '</span>';
+    }
+
+    renderRecordState();
+  }
+
+  document.querySelectorAll('.lang-opt').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentLang = btn.getAttribute('data-lang');
+      document.querySelectorAll('.lang-opt').forEach(b => b.classList.toggle('active', b === btn));
+      renderStaticText();
+    });
+  });
+
+  // ===================================================================
   // HELPER: tampilkan pesan error singkat di area rekam
   // ===================================================================
   function showRecordError(message) {
+    recordState = 'failed';
+    renderRecordState();
     recordLabel.textContent = message;
-    recordLabel.style.color = 'var(--danger)';
-    recordStatus.textContent = 'Gagal';
   }
 
   function resetRecordLabel() {
-    recordLabel.style.color = '';
-    recordLabel.textContent = 'Tekan untuk berbicara';
-    recordSub.textContent = 'Rekaman akan otomatis berhenti saat Anda tekan lagi';
+    recordState = 'idle';
+    renderRecordState();
   }
 
   function hideAllSteps() {
@@ -654,12 +853,11 @@
       mediaRecorder.start();
       isRecording = true;
       micBtn.classList.add('recording');
-      recordStatus.textContent = 'Mendengarkan...';
-      recordLabel.textContent = 'Sedang mendengarkan...';
-      recordSub.textContent = 'Tekan lagi kalau sudah selesai berbicara';
+      recordState = 'listening';
+      renderRecordState();
     } catch (err) {
       console.error('Gagal akses mikrofon:', err);
-      showRecordError('Tidak bisa akses mikrofon. Cek izin browser.');
+      showRecordError(t('micPermissionError'));
     }
   }
 
@@ -667,9 +865,8 @@
     if (mediaRecorder && isRecording) {
       isRecording = false;
       micBtn.classList.remove('recording');
-      recordStatus.textContent = 'Diproses...';
-      recordLabel.textContent = 'Sedang ditranskrip...';
-      recordSub.textContent = 'Tunggu sebentar nya';
+      recordState = 'processing';
+      renderRecordState();
       mediaRecorder.stop();
     }
   }
@@ -680,7 +877,7 @@
     resetRecordLabel();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showRecordError('Browser ini tidak mendukung rekam audio.');
+      showRecordError(t('micNotSupported'));
       return;
     }
 
@@ -711,20 +908,20 @@
       handleTranscriptReady(data.text_indo || '');
     } catch (err) {
       console.error('Gagal transcribe:', err);
-      recordStatus.textContent = 'Gagal';
-      recordLabel.textContent = 'Transkrip gagal, coba lagi';
-      recordLabel.style.color = 'var(--danger)';
+      recordState = 'failed';
+      renderRecordState();
       recordSub.textContent = err.message || 'Ada masalah menyambungkan ke server.';
     }
   }
 
   function handleTranscriptReady(text) {
-    recordStatus.textContent = '✓';
-    resetRecordLabel();
+    recordState = 'done';
+    renderRecordState();
 
     originalTranscript = text;
     transcriptBox.value = text;
-    confirmBadge.textContent = 'Hasil ucapan';
+    isEdited = false;
+    confirmBadge.textContent = t('confirmBadgeOriginal');
     editFlag.classList.remove('show');
     confirmSection.classList.add('show');
     transcriptBox.focus();
@@ -737,10 +934,12 @@
     const currentEdit = transcriptBox.value.trim();
 
     if (currentEdit === originalTranscript.trim()) {
-      confirmBadge.textContent = 'Hasil ucapan';
+      isEdited = false;
+      confirmBadge.textContent = t('confirmBadgeOriginal');
       editFlag.classList.remove('show');
     } else {
-      confirmBadge.textContent = 'Sudah diedit';
+      isEdited = true;
+      confirmBadge.textContent = t('confirmBadgeEdited');
       editFlag.classList.add('show');
     }
   });
@@ -801,7 +1000,7 @@
     resultDivider.setAttribute('data-level', levelKey);
     resultLevelTag.textContent = levelLabel;
     resultLevelTag.setAttribute('data-level', levelKey);
-    resultText.innerHTML = '<span class="placeholder">Sedang diterjemahkan...</span>';
+    resultText.innerHTML = '<span class="placeholder">' + t('resultPlaceholder') + '</span>';
     resultPlayBtn.disabled = true;
     resultPlayBtn.onclick = null;
 
@@ -821,7 +1020,7 @@
       .catch(function (err) {
         console.error('Gagal menerjemahkan level ' + levelLabel + ':', err);
         if (currentLevel !== levelKey) return;
-        resultText.innerHTML = '<span class="placeholder">Gagal menerjemahkan (' + (err.message || 'error') + ')</span>';
+        resultText.innerHTML = '<span class="placeholder">' + t('resultError') + ' (' + (err.message || 'error') + ')</span>';
         resultPlayBtn.disabled = true;
       });
   }
